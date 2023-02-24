@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/homeMenuItem"
+        android:title="Home"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/videoDevicesMenuItem"
+        android:title="Video Devices"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/audioDevicesMenuItem"
+        android:title="Audio Devices"
+        app:showAsAction="ifRoom"/>
+
+</menu>
