@@ -3,6 +3,7 @@ package com.example.challenge
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -11,8 +12,9 @@ class DeviceListAdapter(private val deviceList: List<Device>) :
 
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.deviceNameTextView)
-        val typeTextView: TextView = itemView.findViewById(R.id.deviceTypeTextView)
-        val descriptionTextView: TextView = itemView.findViewById(R.id.deviceDescriptionTextView)
+        val iconImageView: ImageView = itemView.findViewById(R.id.deviceIconImageView)
+//        val typeTextView: TextView = itemView.findViewById(R.id.deviceTypeTextView)
+//        val descriptionTextView: TextView = itemView.findViewById(R.id.deviceDescriptionTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
@@ -24,8 +26,22 @@ class DeviceListAdapter(private val deviceList: List<Device>) :
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
         val device = deviceList[position]
         holder.nameTextView.text = device.name
-        holder.typeTextView.text = device.type
-        holder.descriptionTextView.text = device.description
+
+        when (device.type)
+        {
+            "Video" ->{
+                holder.iconImageView.setImageResource(R.drawable.icvideodevicebottom)
+            }
+            "Alarm" -> {
+                holder.iconImageView.setImageResource(R.drawable.icalarmdevicebottom)
+            }
+            else -> {
+                holder.iconImageView.setImageResource(R.drawable.icerror)
+            }
+        }
+
+//        holder.typeTextView.text = device.type
+//        holder.descriptionTextView.text = device.description
     }
 
     override fun getItemCount(): Int = deviceList.size
