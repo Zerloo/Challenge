@@ -3,7 +3,9 @@ package com.example.challenge
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -13,8 +15,7 @@ class DeviceListAdapter(private val deviceList: List<Device>) :
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.deviceNameTextView)
         val iconImageView: ImageView = itemView.findViewById(R.id.deviceIconImageView)
-//        val typeTextView: TextView = itemView.findViewById(R.id.deviceTypeTextView)
-//        val descriptionTextView: TextView = itemView.findViewById(R.id.deviceDescriptionTextView)
+        val kebabMenuButton: ImageButton = itemView.findViewById(R.id.deviceKebabImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
@@ -26,24 +27,49 @@ class DeviceListAdapter(private val deviceList: List<Device>) :
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
         val device = deviceList[position]
         holder.nameTextView.text = device.name
+        holder.kebabMenuButton.setOnClickListener { view ->
+            showKebabMenu(view, device)
 
-        when (device.type)
-        {
-            "Video" ->{
-                holder.iconImageView.setImageResource(R.drawable.icvideodevicebottom)
+            when (device.type) {
+                "Video" -> {
+                    holder.iconImageView.setImageResource(R.drawable.icvideodevicebottom)
+                }
+                "Alarm" -> {
+                    holder.iconImageView.setImageResource(R.drawable.icalarmdevicebottom)
+                }
+                else -> {
+                    holder.iconImageView.setImageResource(R.drawable.icerror)
+                }
             }
-            "Alarm" -> {
-                holder.iconImageView.setImageResource(R.drawable.icalarmdevicebottom)
-            }
-            else -> {
-                holder.iconImageView.setImageResource(R.drawable.icerror)
-            }
+
         }
 
-//        holder.typeTextView.text = device.type
-//        holder.descriptionTextView.text = device.description
     }
-
     override fun getItemCount(): Int = deviceList.size
 }
 
+private fun showKebabMenu(view: View, device: Device) {
+    val popup = PopupMenu(view.context, view)
+    popup.menuInflater.inflate(R.menu.kebab_menu, popup.menu)
+    popup.setOnMenuItemClickListener { item ->
+        when (item.itemId) {
+            R.id.editMenuItem -> {
+                true
+            }
+            R.id.infoMenuItem -> {
+                true
+            }
+            R.id.unfavoriteMenuItem -> {
+                true
+            }
+            R.id.favoriteMenuItem -> {
+                true
+            }
+            R.id.deleteMenuItem -> {
+                true
+            }
+            else -> false
+        }
+    }
+    popup.show()
+}
