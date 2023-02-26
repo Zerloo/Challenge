@@ -3,6 +3,7 @@ package com.example.challenge
 data class Device(
     val name: String,
     val type: String,
-    val description: String,
-    val favorite: Boolean
+    val mac: String,
+    val favorite: String,
+    val id: String
 )
