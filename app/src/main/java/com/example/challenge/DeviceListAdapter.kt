@@ -8,8 +8,9 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.challenge.webclient.models.AlarmDevice
 
-class DeviceListAdapter(private val deviceList: List<Device>) :
+class DeviceListAdapter(private val deviceList: List<AlarmDevice>) :
     RecyclerView.Adapter<DeviceListAdapter.DeviceViewHolder>() {
 
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -48,7 +49,7 @@ class DeviceListAdapter(private val deviceList: List<Device>) :
     override fun getItemCount(): Int = deviceList.size
 }
 
-private fun showKebabMenu(view: View, device: Device) {
+private fun showKebabMenu(view: View, device: AlarmDevice) {
     val popup = PopupMenu(view.context, view)
     popup.menuInflater.inflate(R.menu.kebab_menu, popup.menu)
     popup.setOnMenuItemClickListener { item ->

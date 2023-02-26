@@ -1,30 +1,47 @@
 package com.example.challenge
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
+import com.example.challenge.webclient.AlarmWebClient
+import com.example.challenge.webclient.models.AlarmDevice
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var deviceList: List<Device>
+    private lateinit var deviceList: List<AlarmDevice>
+    private lateinit var lifecycleScope: LifecycleCoroutineScope
+    private val webClient by lazy {
+        AlarmWebClient()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        deviceList = listOf(
-            Device("Device 1", "Alarm", "Description of Device 1", true),
-            Device("Device 2", "Video", "Description of Device 2", true),
-            Device("Device 3", "Alarm", "Description of Device 3", false),
-            Device("Device 4", "Video", "Description of Device 4", true)
-        )
+        lifecycleScope = lifecycle.coroutineScope
 
+        lifecycleScope.launch {
+            deviceList = webClient.getAlarm()
+            Log.i("Lista Alarm", "onCreate: $deviceList")
+            configRecyclerView()
+        }
+    }
+
+    private fun configRecyclerView(): RecyclerView {
         val deviceListRecyclerView: RecyclerView = findViewById(R.id.deviceListRecyclerView)
         deviceListRecyclerView.adapter = DeviceListAdapter(deviceList)
+        configBottomNavigationView(deviceListRecyclerView)
+        return deviceListRecyclerView
+    }
 
-
+    private fun configBottomNavigationView(deviceListRecyclerView: RecyclerView) {
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -43,14 +60,13 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.favoriteDevicesMenuItem -> {
-                    val favoriteDevices = deviceList.filter { it.favorite }
+                    val favoriteDevices = deviceList.filter { it.favorite == "true" }
                     deviceListRecyclerView.adapter = DeviceListAdapter(favoriteDevices)
                     true
                 }
                 else -> false
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
