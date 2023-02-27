@@ -1,24 +1,34 @@
 package com.example.challenge
 
+import android.bluetooth.BluetoothClass.Device
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import com.example.challenge.webclient.AlarmWebClient
+import com.example.challenge.dao.AppDataBase
+import com.example.challenge.dao.VideoDeviceDao
+import com.example.challenge.webclient.VideoWebClient
+import com.example.challenge.webclient.models.VideoDevice
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var deviceList: List<Device>
+    private lateinit var deviceList: List<VideoDevice>
     private lateinit var lifecycleScope: LifecycleCoroutineScope
-    private val webClient by lazy {
-        AlarmWebClient()
+
+    private val webClientVideo by lazy {
+        VideoWebClient()
+    }
+    private val daoVideo by lazy {
+        AppDataBase.instancia(this).videoDeviceDao()
     }
 
+    private val daoAlarm by lazy {
+        AppDataBase.instancia(this).alarmDeviceDao()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +37,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope = lifecycle.coroutineScope
 
         lifecycleScope.launch {
-            deviceList = webClient.getAlarm()
-            Log.i("Lista Alarm", "onCreate: $deviceList")
+            deviceList = webClientVideo.getVideo()
             configRecyclerView()
         }
     }
@@ -71,6 +80,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.kebab_menu, menu)
         return true
+    }
+
+/// Criando Funções Dao
+    private fun saveVideoDevice() {
+        val device = createDevice()
+        lifecycleScope.launch() {
+            daoVideo.saveVideoDevice(device)
+            finish()
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.challenge.webclient.services
 
-import com.example.challenge.webclient.models.DeviceResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.GET
@@ -14,7 +13,7 @@ interface AlarmDeviceService {
 
 interface VideoDeviceService {
 
-    @GET ("video-centrals")
-    suspend fun videoDeviceService() : List<DeviceResponse>
+    @GET ("video-devices")
+    suspend fun videoDeviceService() : Response<ResponseBody>
 
 }
